@@ -1,11 +1,12 @@
-import { UpdateCategory } from './../dto/Categories';
+import { UpdateCategory } from '../dto/Category';
 import express, { Request, Response } from 'express'
 import { CATEGORIES } from '../Models/CategoryModel'
-import { CategoryObj } from '../dto/Categories'
+import { CategoryObj } from '../dto/Category'
+
 const path = 'http://localhost:9000/assets/'
 
 export const createCategory = async (req: Request, res: Response) => {
-    const { name } =<CategoryObj>req.body;
+    const { name } = <CategoryObj>req.body;
     const files = req.files as [Express.Multer.File];
     const images = files.map((file: Express.Multer.File) => path + file.filename)
 

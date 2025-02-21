@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { CategoryObj } from "../dto/Categories";
+import { CategoryObj } from "../dto/Category";
 
 const CategorySchema = new Schema(
     {
@@ -16,7 +16,7 @@ const CategorySchema = new Schema(
             transform(doc, ret) {
                 delete ret.__v;
                 delete ret.createAt;
-                delete ret. updateAt;
+                delete ret.updateAt;
             }
         },
         timestamp: true
