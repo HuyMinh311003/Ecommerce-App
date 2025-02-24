@@ -9,7 +9,7 @@ export interface IGoBack {
 export const GoBack = ({ onPress }: IGoBack) => {
     return (
         <Pressable onPress={onPress}>
-            <Ionicons name="chevron-back-circle" size={30} color="#fff" />
+            <Ionicons name="chevron-back-circle" size={30} color="black" />
         </Pressable>
     )
 }
