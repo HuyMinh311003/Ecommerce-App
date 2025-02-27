@@ -7,5 +7,6 @@ export interface ProductParams {
     quantity: number;
     inStock: boolean;
     isFeatured: boolean;
+    isFavorited: boolean;
     category: string;
 }

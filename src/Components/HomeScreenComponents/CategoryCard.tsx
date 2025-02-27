@@ -15,7 +15,7 @@ export const CategoryCard = ({
   cateStyleProps,
 }: ICateProps) => {
   let isActive = item._id == cateProps.activeCate;
-  let activeButtonClass = isActive ? "orange" : "#eee";
+  let activeButtonClass = isActive ? "lightblue" : "#fff";
 
   return (
     <View>
@@ -76,13 +76,16 @@ const st = StyleSheet.create({
     padding: 3,
   },
   cateName: {
-    fontSize: 8,
+    fontSize: 12,
     fontWeight: "bold",
   },
   touchableStyle: {
     alignItems: "center",
     padding: 5,
     margin: 3,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
 });
 

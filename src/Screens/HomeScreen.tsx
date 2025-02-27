@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Platform,
-  ScrollView,
-  Pressable,
-  Alert,
-} from "react-native";
+import { View, Text, Platform, ScrollView, Pressable } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { TabsStackScreenProps } from "../Navigation/TabNavigation";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,15 +10,27 @@ import {
   fetchCategories,
   fetchProductsByCateID,
   fetchFeaturedProducts,
+  fetchAllProducts,
 } from "../MiddleWares/HomeMiddleWare";
 import { useFocusEffect } from "@react-navigation/native";
-import { ProductCard } from "../Components/HomeScreenComponents/ProductCard";
-
-type Props = {};
+import { useSelector } from "react-redux";
+import { CartState } from "../TypesCheck/ProductCartTypes";
 
 const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
+  const cart = useSelector((state: CartState) => state.cart.cart);
+  const [message, setMessage] = React.useState("");
+  const [displayMessage, setDisplayMessage] = React.useState<boolean>(false);
+
   const goToCartScreen = () => {
-    navigation.navigate("Cart");
+    if (cart.length === 0) {
+      setMessage("Cart is empty. Please add products to cart.");
+      setDisplayMessage(true);
+      setTimeout(() => {
+        setDisplayMessage(false);
+      }, 3000);
+    } else {
+      navigation.navigate("TabsStack", { screen: "Cart" });
+    }
   };
 
   const sliderImages = [
@@ -50,7 +55,6 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
   }, []);
 
   useEffect(() => {
-    console.log("fetchProductByCateID", fetchProductsByCateID);
     if (activeCate) {
       fetchProductsByCateID({ setGetProductsByCateID, cateID: activeCate });
     }
@@ -66,6 +70,12 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
     }, [activeCate])
   );
 
+  const [allProducts, setAllProducts] = useState<ProductListParams[]>([]);
+
+  useEffect(() => {
+    fetchAllProducts({ setAllProducts });
+  }, []);
+
   return (
     <SafeAreaView
       style={{
@@ -74,13 +84,17 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
         backgroundColor: "white",
       }}
     >
-      <HeaderComponent goToCartScreen={goToCartScreen} />
+      <HeaderComponent
+        goToCartScreen={goToCartScreen}
+        cartLength={cart.length}
+        allProducts={allProducts}
+      />
 
       <ImageSlider images={sliderImages} />
 
       <ScrollView style={{ marginTop: 10 }}>
         <View style={{ backgroundColor: "white", flex: 1, height: 200 }}>
-          <Text style={{ fontSize: 14, fontWeight: "bold", padding: 10 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", padding: 10 }}>
             Categories
           </Text>
           <ScrollView
@@ -94,8 +108,8 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
                 key={index}
                 item={{ name: item.name, images: item.images, _id: item._id }}
                 cateStyleProps={{
-                  height: 100,
-                  width: 100,
+                  height: 95,
+                  width: 95,
                   resizeMode: "contain",
                 }}
                 cateProps={{
@@ -109,17 +123,26 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
 
         <View
           style={{
-            backgroundColor: "pink",
+            backgroundColor: "blue",
             flexDirection: "row",
             justifyContent: "space-between",
             marginTop: 10,
           }}
         >
-          <Text style={{ fontSize: 14, fontWeight: "bold", padding: 10 }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "bold",
+              padding: 10,
+              color: "white",
+            }}
+          >
             Products from Selected Category
           </Text>
           <Pressable>
-            <Text style={{ fontSize: 14, padding: 10 }}>See All</Text>
+            <Text style={{ fontSize: 14, padding: 10, color: "white" }}>
+              See All
+            </Text>
           </Pressable>
         </View>
 
@@ -152,7 +175,7 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
                 />
               ))
             ) : (
-              <Text style={{ padding: 10 }}>No Product To Show</Text>
+              <Text style={{ padding: 10 }}>No Product Available</Text>
             )}
           </ScrollView>
         </View>
@@ -165,11 +188,20 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
             marginTop: 10,
           }}
         >
-          <Text style={{ fontSize: 14, fontWeight: "bold", padding: 10 }}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: "bold",
+              padding: 10,
+              color: "white",
+            }}
+          >
             Featured Products
           </Text>
           <Pressable>
-            <Text style={{ fontSize: 14, padding: 10 }}>See All</Text>
+            <Text style={{ fontSize: 14, padding: 10, color: "white" }}>
+              See All
+            </Text>
           </Pressable>
         </View>
 
@@ -202,7 +234,7 @@ const HomeScreen = ({ navigation, route }: TabsStackScreenProps<"Home">) => {
                 />
               ))
             ) : (
-              <Text>Không có sản phẩm nào nổi bật</Text>
+              <Text>No Featured Products Available</Text>
             )}
           </ScrollView>
         </View>

@@ -1,15 +1,12 @@
 import react, { useState, useRef } from "react";
 import {
   View,
-  Text,
-  SafeAreaView,
   Dimensions,
   Animated,
   StyleSheet,
   Image,
   ImageSourcePropType,
 } from "react-native";
-import { Entypo, AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useInterval } from "../../Hooks/UseInterval";
 
 interface ImageProps {
@@ -100,6 +97,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
   },
   activeIndicator: {
-    backgroundColor: "green",
+    backgroundColor: "blue",
   },
 });

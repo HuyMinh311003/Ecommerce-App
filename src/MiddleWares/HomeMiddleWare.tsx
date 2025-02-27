@@ -21,7 +21,6 @@ export const fetchCategories = async ({ setGetCategory }: ICateProps) => {
     const response = await axios.get(
       "http://10.0.2.2:9000/category/getAllCategories"
     );
-    console.log("API Response: ", response.data);
 
     if (Array.isArray(response.data)) {
       const fixedData = response.data.map((item) => ({
@@ -50,7 +49,6 @@ export const fetchProductsByCateID = async ({
     const response: FetchProductsParams = await axios.get(
       `http://10.0.2.2:9000/product/getProductByCateID/${cateID}`
     );
-    console.log("API Response: ", response.data);
 
     if (Array.isArray(response.data)) {
       const fixedData = response.data.map((item) => ({
@@ -84,7 +82,6 @@ export const fetchFeaturedProducts = async ({
     const response: FetchProductsParams = await axios.get(
       "http://10.0.2.2:9000/product/getFeaturedProducts"
     );
-    console.log("API Response: ", response.data);
 
     if (Array.isArray(response.data)) {
       const fixedData = response.data.map((item) => ({
@@ -104,5 +101,66 @@ export const fetchFeaturedProducts = async ({
   } catch (error) {
     console.log("axios get error", error);
     setGetFeaturedProducts([]);
+  }
+};
+
+export const fetchAllProducts = async ({
+  setAllProducts,
+}: {
+  setAllProducts: React.Dispatch<React.SetStateAction<ProductListParams[]>>;
+}) => {
+  try {
+    const response = await axios.get(
+      "http://10.0.2.2:9000/product/getAllProducts"
+    );
+
+    if (Array.isArray(response.data)) {
+      const fixedData = response.data.map((item) => ({
+        ...item,
+        images: item.images.map((img: string) =>
+          img.replace("http://localhost", "http://10.0.2.2")
+        ),
+      }));
+      setAllProducts(fixedData);
+    } else {
+      console.warn("fetchAllProducts: API data is not an array", response.data);
+      setAllProducts([]);
+    }
+  } catch (error) {
+    console.log("axios get error", error);
+    setAllProducts([]);
+  }
+};
+
+export const fetchFavoritedProducts = async ({
+  setGetFavoritedProducts,
+}: {
+  setGetFavoritedProducts: React.Dispatch<
+    React.SetStateAction<ProductListParams[]>
+  >;
+}) => {
+  try {
+    const response: FetchProductsParams = await axios.get(
+      "http://10.0.2.2:9000/product/getFavoritedProducts"
+    );
+
+    if (Array.isArray(response.data)) {
+      const fixedData = response.data.map((item) => ({
+        ...item,
+        images: item.images.map((img: string) =>
+          img.replace("http://localhost", "http://10.0.2.2")
+        ),
+      }));
+      setGetFavoritedProducts(fixedData);
+    } else {
+      console.warn(
+        "fetchFeaturedProducts: API data is not an array",
+        response.data
+      );
+      setGetFavoritedProducts([]);
+    }
+  } catch (error) {
+    console.log("axios get error", error);
+    setGetFavoritedProducts([]);
   }
 };
